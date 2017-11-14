@@ -17,9 +17,12 @@ def get_book_name(url):
 
 
 def get_next_chapter(l_url, r_url):
-    url = l_url + '/' + r_url
-    soup = get_soup(url)
-    next_r_chapter = soup.find('a', id='book-next').get('href')
+    try:
+        url = l_url + '/' + r_url
+        soup = get_soup(url)
+        next_r_chapter = soup.find('a', id='book-next').get('href')
+    except:
+        get_next_chapter(l_url, r_url)
     return next_r_chapter
 
 
@@ -35,12 +38,12 @@ def get_novel(l_url, r_url, book_name):
             print(title, 'OK')
     except Exception as e:
         print(e)
-        if r_url.find('index') > 1:
+        if r_url.find('index') != -1:
             print("It's the end.")
             return
         get_novel(l_url, r_url, book_name)
     r_url = get_next_chapter(l_url, r_url)
-    if r_url.find('index') > 1:
+    if r_url.find('index') != -1:
         print("It's the end.")
         return
     get_novel(l_url, r_url, book_name)
