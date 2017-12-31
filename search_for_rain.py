@@ -25,6 +25,6 @@ while line:
     line = f.readline()
 f.close()
 for key in dic:
-    print key, dic[key]
-print 'we find the keyword for ', len(dic), ' times.'
+    print(key, dic[key])
+print('we find the keyword for ', len(dic), ' times.')
 
