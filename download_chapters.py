@@ -65,7 +65,7 @@ if __name__ == '__main__':
     exist_id_list = []
     for item in exist_id_tuple:
         for exist_id in item:
-            exist_id_list.append(exist_id)
+            exist_id_list.append(int(exist_id))
     local_list = []
     for tuples in novel_local:
         for local in tuples:
