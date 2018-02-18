@@ -46,8 +46,6 @@ def download_single_novel(content_url, path, exist_id_list):
     database = pymysql.connect("localhost", "root", "zxc19901225", "novel", charset="utf8")
     for chapter in all_chapter:
         chapter_number = re.search('\d+', str(chapter)).group(0)
-        print(chapter_number, type(chapter_number))
-        print(exist_id_list)
         if int(chapter_number) in exist_id_list:
             continue
         title = BeautifulSoup(str(chapter), 'html.parser').text
