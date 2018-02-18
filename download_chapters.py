@@ -18,7 +18,7 @@ def put_data_into_database(target, title, sql_id, db, path):
         put_data_into_database(target, title, sql_id, db, path)
     if flag is False:
         flag = True
-        return
+        return True
     soup = BeautifulSoup(response.content, 'html.parser')
     word = soup.find('div', id='BookText').text.replace('\xa0', ' ').replace('   ', '\n')
     book_id = path.split('/')[3]
@@ -51,7 +51,8 @@ def download_single_novel(content_url, path, exist_id_list):
             continue
         title = BeautifulSoup(str(chapter), 'html.parser').text
         url = content_url + chapter_number + '.html'
-        put_data_into_database(url, title, chapter_number, database, path)
+        if put_data_into_database(url, title, chapter_number, database, path):
+            continue
 
 
 if __name__ == '__main__':
