@@ -17,6 +17,7 @@ def put_data_into_database(target, title, sql_id, db, path):
         print('Got error in getting page of', target)
         put_data_into_database(target, title, sql_id, db, path)
     if flag is False:
+        flag = True
         return
     soup = BeautifulSoup(response.content, 'html.parser')
     word = soup.find('div', id='BookText').text.replace('\xa0', ' ').replace('   ', '\n')
