@@ -5,19 +5,11 @@ from bs4 import BeautifulSoup
 import re
 import os
 
-global flag
-flag = True
-
 
 def put_data_into_database(target, title, sql_id, db, path):
-    global flag
     response = requests.request('get', url=target)
-    if response.status_code != 200 and flag is True:
-        flag = False
+    if response.status_code != 200:
         print('Got error in getting page of', target)
-        put_data_into_database(target, title, sql_id, db, path)
-    if flag is False:
-        flag = True
         return True
     soup = BeautifulSoup(response.content, 'html.parser')
     word = soup.find('div', id='BookText').text.replace('\xa0', ' ').replace('   ', '\n')
