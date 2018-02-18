@@ -38,7 +38,6 @@ def download_single_novel(content_url, path):
     for chapter in all_chapter:
         chapter_number = re.search('\d+', str(chapter)).group(0)
         title = BeautifulSoup(str(chapter), 'html.parser').text
-        print(title)
         url = content_url + chapter_number + '.html'
         put_data_into_database(url, title, chapter_number, database, path)
 
@@ -52,5 +51,7 @@ if __name__ == '__main__':
     local_list = []
     for tuples in novel_local:
         for local in tuples:
+            print('start download of', local)
             url = 'https://m.uuxs.la' + local
             download_single_novel(url, local)
+            print('done!')
