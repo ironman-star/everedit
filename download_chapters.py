@@ -46,7 +46,9 @@ def download_single_novel(content_url, path, exist_id_list):
     database = pymysql.connect("localhost", "root", "zxc19901225", "novel", charset="utf8")
     for chapter in all_chapter:
         chapter_number = re.search('\d+', str(chapter)).group(0)
-        if chapter_number in exist_id_list:
+        print(chapter_number, type(chapter_number))
+        print(exist_id_list)
+        if int(chapter_number) in exist_id_list:
             continue
         title = BeautifulSoup(str(chapter), 'html.parser').text
         url = content_url + chapter_number + '.html'
@@ -65,7 +67,7 @@ if __name__ == '__main__':
     exist_id_list = []
     for item in exist_id_tuple:
         for exist_id in item:
-            exist_id_list.append(int(exist_id))
+            exist_id_list.append(exist_id)
     local_list = []
     for tuples in novel_local:
         for local in tuples:
