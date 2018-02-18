@@ -14,6 +14,7 @@ def put_data_into_database(target, title, sql_id, db, path):
     response = requests.request('get', url=target)
     if response.status_code != 200 and flag is True:
         flag = False
+        print('Got error in getting page of', target)
         put_data_into_database(target, title, sql_id, db, path)
     if flag is False:
         return
@@ -39,7 +40,6 @@ def put_data_into_database(target, title, sql_id, db, path):
 
 def download_single_novel(content_url, path, exist_id_list):
     response1 = requests.get(content_url).content
-
     soup1 = BeautifulSoup(response1, 'html.parser')
     main_chapter = BeautifulSoup(str(soup1.find('div', id='main')), 'html.parser')
     all_chapter = main_chapter.find_all('a')
