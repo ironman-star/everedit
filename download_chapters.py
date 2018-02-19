@@ -13,7 +13,6 @@ def put_data_into_database(target, title, sql_id, path):
     if response.status_code != 200:
         print('Got error in getting page of', target)
         return True
-    print('start', target)
     soup = BeautifulSoup(response.content, 'html.parser')
     word = soup.find('div', id='BookText').text.replace('\xa0', ' ').replace('   ', '\n')
     book_id = path.split('/')[3]
@@ -32,7 +31,6 @@ def put_data_into_database(target, title, sql_id, path):
         print(e, '????????????????????????????????')
         db.rollback()
         print('something is wrong')
-    print('end', target)
 
 
 def download_single_novel(content_url, path, exist_id_list):
