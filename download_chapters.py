@@ -4,13 +4,16 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import os
+from multiprocessing.dummy import Pool as ThreadPool
 
 
-def put_data_into_database(target, title, sql_id, db, path):
+def put_data_into_database(target, title, sql_id, path):
+    db = pymysql.connect("localhost", "root", "zxc19901225", "novel", charset="utf8")
     response = requests.request('get', url=target)
     if response.status_code != 200:
         print('Got error in getting page of', target)
         return True
+    print('start', target)
     soup = BeautifulSoup(response.content, 'html.parser')
     word = soup.find('div', id='BookText').text.replace('\xa0', ' ').replace('   ', '\n')
     book_id = path.split('/')[3]
@@ -26,25 +29,28 @@ def put_data_into_database(target, title, sql_id, db, path):
         cursor.execute(sql_command)
         db.commit()
     except Exception as e:
-        print(e)
+        print(e, '????????????????????????????????')
         db.rollback()
         print('something is wrong')
+    print('end', target)
 
 
 def download_single_novel(content_url, path, exist_id_list):
+    pool = ThreadPool(4)
     response1 = requests.get(content_url).content
     soup1 = BeautifulSoup(response1, 'html.parser')
     main_chapter = BeautifulSoup(str(soup1.find('div', id='main')), 'html.parser')
     all_chapter = main_chapter.find_all('a')
-    database = pymysql.connect("localhost", "root", "zxc19901225", "novel", charset="utf8")
+
     for chapter in all_chapter:
         chapter_number = re.search('\d+', str(chapter)).group(0)
         if int(chapter_number) in exist_id_list:
             continue
         title = BeautifulSoup(str(chapter), 'html.parser').text
         url = content_url + chapter_number + '.html'
-        if put_data_into_database(url, title, chapter_number, database, path):
-            continue
+        pool.apply_async(put_data_into_database, [url, title, chapter_number, path])
+        # if put_data_into_database(url, title, chapter_number, database, path):
+        #     continue
 
 
 if __name__ == '__main__':
