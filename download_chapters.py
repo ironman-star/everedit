@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import os
 from multiprocessing.dummy import Pool as ThreadPool
+import time
 
 
 def put_data_into_database(target, title, sql_id, path):
@@ -43,7 +44,8 @@ def put_data_into_database(target, title, sql_id, path):
 
 
 def download_single_novel(content_url, path, exist_id_list):
-    print('starting')
+    print('Starting')
+    start_time = time.time()
     pool = ThreadPool(16)
     response1 = requests.get(content_url).content
     soup1 = BeautifulSoup(response1, 'html.parser')
@@ -60,7 +62,8 @@ def download_single_novel(content_url, path, exist_id_list):
         #     continue
     pool.close()
     pool.join()
-    print('end')
+    end_time = time.time()
+    print('The end, takes', end_time-start_time,'seconds')
 
 
 if __name__ == '__main__':
