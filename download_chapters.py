@@ -48,7 +48,7 @@ def put_data_into_database(target, title, sql_id, path):
 
 def download_single_novel(content_url, path, exist_id_list):
     start_time = time.time()
-    pool = ThreadPool(32)
+    pool = ThreadPool(100)
     response1 = requests.get(content_url).content
     soup1 = BeautifulSoup(response1, 'html.parser')
     main_chapter = BeautifulSoup(str(soup1.find('div', id='main')), 'html.parser')
