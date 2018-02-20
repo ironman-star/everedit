@@ -51,10 +51,12 @@ def download_single_novel(content_url, path, exist_id_list):
     soup1 = BeautifulSoup(response1, 'html.parser')
     main_chapter = BeautifulSoup(str(soup1.find('div', id='main')), 'html.parser')
     all_chapter = main_chapter.find_all('a')
+    count = 0
     for chapter in all_chapter:
         chapter_number = re.search('\d+', str(chapter)).group(0)
         if int(chapter_number) in exist_id_list:
             continue
+        count += 1
         title = BeautifulSoup(str(chapter), 'html.parser').text
         url = content_url + chapter_number + '.html'
         pool.apply_async(put_data_into_database, [url, title, chapter_number, path])
@@ -63,7 +65,7 @@ def download_single_novel(content_url, path, exist_id_list):
     pool.close()
     pool.join()
     end_time = time.time()
-    print('The end, takes', end_time-start_time,'seconds')
+    print('The end,', 'download', count, 'chapters, takes', end_time-start_time, 'seconds')
 
 
 if __name__ == '__main__':
