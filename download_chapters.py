@@ -17,7 +17,7 @@ def put_data_into_database(target, title, sql_id, path):
     :return: if didn't get the page (status code is not 200), interrupt.
     """
     # print('start of', sql_id)
-    db = pymysql.connect("localhost", "root", "zxc19901225", "novel", charset="utf8")
+    conn = pymysql.connect("localhost", "root", "zxc19901225", "novel", charset="utf8")
     response = requests.request('get', url=target)
     if response.status_code != 200:
         print('Got error in getting page of', target)
@@ -30,21 +30,23 @@ def put_data_into_database(target, title, sql_id, path):
         os.makedirs(path)
     with open(path + sql_id + '.txt', 'w')as f:
         f.write(word)
-    cursor = db.cursor()
+    cursor = conn.cursor()
     sql_command = "insert into chapter_list (book_id, title, chapter_id) values (%s,'%s',%s);" % (
         book_id, title, sql_id)
     try:
         cursor.execute(sql_command)
-        db.commit()
+        conn.commit()
         # print('end of', sql_id)
     except Exception as e:
         print(e, '----------url is', target)
-        db.rollback()
+        conn.rollback()
         print('something is wrong')
+    finally:
+        cursor.close()  # 关闭标记位
+        conn.close()
 
 
 def download_single_novel(content_url, path, exist_id_list):
-    print('Starting')
     start_time = time.time()
     pool = ThreadPool(32)
     response1 = requests.get(content_url).content
@@ -65,12 +67,12 @@ def download_single_novel(content_url, path, exist_id_list):
     pool.close()
     pool.join()
     end_time = time.time()
-    print('The end,', 'download', count, 'chapters, takes', end_time-start_time, 'seconds')
+    print('Finish,', 'download', count, 'chapters, takes', end_time-start_time, 'seconds')
 
 
 if __name__ == '__main__':
-    db = pymysql.connect('localhost', 'root', 'zxc19901225', 'novel', charset='utf8')
-    cursor = db.cursor()
+    conn = pymysql.connect('localhost', 'root', 'zxc19901225', 'novel', charset='utf8')
+    cursor = conn.cursor()
     mysql_command = 'select book_local from novel_list;'
     cursor.execute(mysql_command)
     novel_local = cursor.fetchall()
@@ -84,5 +86,11 @@ if __name__ == '__main__':
     local_list = []
     for tuples in novel_local:
         for local in tuples:
+            mysql_command = "select book_name from novel_list where book_local='%s';"%local
+            cursor.execute(mysql_command)
+            book_name = cursor.fetchall()
+            print('Starting download', book_name)
+            cursor.close()
+            conn.close()
             url = 'https://m.uuxs.la' + local
             download_single_novel(url, local, exist_id_list)
