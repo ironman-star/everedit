@@ -37,7 +37,7 @@ def put_data_into_database(target, title, sql_id, path):
         db.commit()
         # print('end of', sql_id)
     except Exception as e:
-        print(e, '????????????????????????????????')
+        print(e, '----------url is', target)
         db.rollback()
         print('something is wrong')
 
@@ -61,7 +61,6 @@ def download_single_novel(content_url, path, exist_id_list):
     pool.close()
     pool.join()
     print('end')
-
 
 
 if __name__ == '__main__':
