@@ -90,7 +90,5 @@ if __name__ == '__main__':
             cursor.execute(mysql_command)
             book_name = cursor.fetchall()
             print('Starting download', book_name)
-            cursor.close()
-            conn.close()
             url = 'https://m.uuxs.la' + local
             download_single_novel(url, local, exist_id_list)
