@@ -43,12 +43,12 @@ def put_data_into_database(target, title, sql_id, path):
 
 
 def download_single_novel(content_url, path, exist_id_list):
-    pool = ThreadPool(8)
+    print('starting')
+    pool = ThreadPool(32)
     response1 = requests.get(content_url).content
     soup1 = BeautifulSoup(response1, 'html.parser')
     main_chapter = BeautifulSoup(str(soup1.find('div', id='main')), 'html.parser')
     all_chapter = main_chapter.find_all('a')
-    target_list = []
     for chapter in all_chapter:
         chapter_number = re.search('\d+', str(chapter)).group(0)
         if int(chapter_number) in exist_id_list:
@@ -60,6 +60,7 @@ def download_single_novel(content_url, path, exist_id_list):
         #     continue
     pool.close()
     pool.join()
+    print('end')
 
 
 
@@ -79,7 +80,5 @@ if __name__ == '__main__':
     local_list = []
     for tuples in novel_local:
         for local in tuples:
-            print('start download of', local)
             url = 'https://m.uuxs.la' + local
             download_single_novel(url, local, exist_id_list)
-            print('done!')
