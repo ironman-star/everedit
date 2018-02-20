@@ -8,6 +8,14 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 
 def put_data_into_database(target, title, sql_id, path):
+    """
+    :param target: url of chapter
+    :param title: title of chapter
+    :param sql_id: saved file's name of chapter
+    :param path: saved file's path of chapter
+    :return: if didn't get the page (status code is not 200), interrupt.
+    """
+    # print('start of', sql_id)
     db = pymysql.connect("localhost", "root", "zxc19901225", "novel", charset="utf8")
     response = requests.request('get', url=target)
     if response.status_code != 200:
@@ -27,6 +35,7 @@ def put_data_into_database(target, title, sql_id, path):
     try:
         cursor.execute(sql_command)
         db.commit()
+        # print('end of', sql_id)
     except Exception as e:
         print(e, '????????????????????????????????')
         db.rollback()
@@ -34,12 +43,12 @@ def put_data_into_database(target, title, sql_id, path):
 
 
 def download_single_novel(content_url, path, exist_id_list):
-    pool = ThreadPool(4)
+    pool = ThreadPool(8)
     response1 = requests.get(content_url).content
     soup1 = BeautifulSoup(response1, 'html.parser')
     main_chapter = BeautifulSoup(str(soup1.find('div', id='main')), 'html.parser')
     all_chapter = main_chapter.find_all('a')
-
+    target_list = []
     for chapter in all_chapter:
         chapter_number = re.search('\d+', str(chapter)).group(0)
         if int(chapter_number) in exist_id_list:
@@ -49,6 +58,9 @@ def download_single_novel(content_url, path, exist_id_list):
         pool.apply_async(put_data_into_database, [url, title, chapter_number, path])
         # if put_data_into_database(url, title, chapter_number, database, path):
         #     continue
+    pool.close()
+    pool.join()
+
 
 
 if __name__ == '__main__':
