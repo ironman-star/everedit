@@ -91,6 +91,6 @@ if __name__ == '__main__':
             mysql_command = "select book_name from novel_list where book_local='%s';" % local
             cursor.execute(mysql_command)
             book_name = cursor.fetchall()
-            print(list_number, '-------------Starting download', book_name)
             url = 'https://m.uuxs.la' + local
+            print(list_number, '-------------Starting download', book_name, url)
             download_single_novel(url, local, exist_id_list)
