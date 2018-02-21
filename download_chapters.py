@@ -67,7 +67,7 @@ def download_single_novel(content_url, path, exist_id_list):
     pool.close()
     pool.join()
     end_time = time.time()
-    print('Finish,', 'download', count, 'chapters, takes', end_time-start_time, 'seconds')
+    print('Finish,', 'download', count, 'chapters, takes', end_time - start_time, 'seconds')
 
 
 if __name__ == '__main__':
@@ -84,11 +84,13 @@ if __name__ == '__main__':
         for exist_id in item:
             exist_id_list.append(exist_id)
     local_list = []
+    list_number = 0
     for tuples in novel_local:
         for local in tuples:
-            mysql_command = "select book_name from novel_list where book_local='%s';"%local
+            list_number += 1
+            mysql_command = "select book_name from novel_list where book_local='%s';" % local
             cursor.execute(mysql_command)
             book_name = cursor.fetchall()
-            print('Starting download', book_name)
+            print(list_number, '-------------Starting download', book_name)
             url = 'https://m.uuxs.la' + local
             download_single_novel(url, local, exist_id_list)
