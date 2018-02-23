@@ -31,7 +31,7 @@ def put_data_into_database(target, title, sql_id, path):
     with open(path + sql_id + '.txt', 'w')as f:
         f.write(word)
     cursor = conn.cursor()
-    sql_command = "insert into chapter_list (book_id, title, chapter_id) values (%s,'%s',%s);", (
+    sql_command = "insert into chapter_list (book_id, title, chapter_id) values (%s,'%s',%s);"%(
         book_id, title, sql_id)
     try:
         cursor.execute(sql_command)
