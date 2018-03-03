@@ -14,6 +14,8 @@ def get_dir_path(book_name):
     sql_command = """select book_local from novel_list where book_name='%s'""" % book_name
     cursor.execute(sql_command)
     data = cursor.fetchone()
+    cursor.close()
+    conn.close()
     dir_path = '/home/novel/everedit' + data[0]
     return dir_path
 
@@ -24,6 +26,8 @@ def get_chapter_title(chapter_id):
     sql_command = """select title from chapter_list where chapter_id='%s'""" % chapter_id
     cursor.execute(sql_command)
     data = cursor.fetchone()
+    cursor.close()
+    conn.close()
     chapter_title = data[0]
     return chapter_title
 
