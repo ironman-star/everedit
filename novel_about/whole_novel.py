@@ -20,27 +20,32 @@ def get_dir_path(book_name):
     return dir_path
 
 
-def get_chapter_title(chapter_id):
+def get_chapter_title(book_name):
+    dir_path=get_dir_path(book_name)
+    book_id=dir_path.split('/')[-2]
     conn = connect_db()
     cursor = conn.cursor()
-    sql_command = """select title from chapter_list where chapter_id='%s'""" % chapter_id
+    sql_command = """select chapter_id, title from chapter_list where book_id='%s'""" % book_id
     cursor.execute(sql_command)
-    data = cursor.fetchone()
+    data = cursor.fetchall()
     cursor.close()
     conn.close()
-    chapter_title = data[0]
-    return chapter_title
+    temp={}
+    for item in data:
+        temp[str(item[0])] = item[1]
+    return temp
 
 
 if __name__ == '__main__':
     book_name = sys.argv[1]
     dir_path = get_dir_path(book_name)
     file_names = os.listdir(dir_path)
+    id_chapter = get_chapter_title(book_name)
     with open(book_name + '.txt', 'w') as result_file:
         for item in file_names:
             with open(dir_path + '/' + item, 'r') as f:
                 chapter_id = item.replace('.txt', '')
-                chapter_title = get_chapter_title(chapter_id)
+                chapter_title = id_chapter[chapter_id]
                 print('resolving', chapter_title)
                 result_file.write(chapter_title + '\n')
                 result_file.write(f.read())
