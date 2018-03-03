@@ -25,7 +25,7 @@ def put_data_into_database(target, title, sql_id, path):
     soup = BeautifulSoup(response.content, 'html.parser')
     word = soup.find('div', id='BookText').text.replace('\xa0', ' ').replace('   ', '\n')
     book_id = path.split('/')[3]
-    path = path[1:]
+    path = 'home'+path
     if not os.path.isdir(path):
         os.makedirs(path)
     with open(path + sql_id + '.txt', 'w')as f:
