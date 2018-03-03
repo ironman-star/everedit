@@ -16,7 +16,7 @@ def get_dir_path(book_name):
     data = cursor.fetchone()
     cursor.close()
     conn.close()
-    dir_path = '/home/novel/everedit' + data[0]
+    dir_path = '/home' + data[0]
     return dir_path
 
 
