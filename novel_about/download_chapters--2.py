@@ -21,6 +21,7 @@ def put_data_into_database(target, title, sql_id, path):
     with open(path + sql_id + '.txt', 'w')as f:
         f.write('\n'+title+'\n')
         f.write(word)
+    print(title, 'is OK!')
 
 
 def download_single_novel(content_url, path, ):
@@ -45,14 +46,17 @@ def download_single_novel(content_url, path, ):
 
 
 if __name__ == '__main__':
-    url = 'https://m.uuxs.la/book/42/42176/'
-    local = './book/42176/'
+    url = 'https://m.uuxs.la/book/0/902/'
+    local = './book/902/'
     # download_single_novel(url, local)
-    dir_path = '/home/book/42176/'
+    dir_path = '/home/book/902/'
     file_names = os.listdir(dir_path)
-    with open('42176' + '.txt', 'w') as result_file:
-        for item in file_names:
-            with open(dir_path + '/' + item, 'r') as f:
-                chapter_id = item.replace('.txt', '')
+    chapter_list = []
+    for item in file_names:
+	    item=item.replace('.txt', '')
+	    chapter_list.append(int(item))
+    with open('902' + '.txt', 'w') as result_file:
+        for item in sorted(chapter_list):
+            with open(dir_path + '/' + str(item)+'.txt', 'r') as f:
                 result_file.write(f.read())
                 result_file.write('\n')
