@@ -13,13 +13,13 @@ class recoder:
     LEVEL = 500  # 声音保存的阈值
     COUNT_NUM = 20  # NUM_SAMPLES个取样之内出现COUNT_NUM个大于LEVEL的取样则记录声音
     SAVE_LENGTH = 8  # 声音记录的最小长度：SAVE_LENGTH * NUM_SAMPLES 个取样
-    TIME_COUNT = 10  # 录音时间，单位s
+    TIME_COUNT = 20  # 录音时间，单位s
 
     Voice_String = []
 
     def savewav(self, filename):
         wf = wave.open(filename, 'wb')
-        wf.setnchannels(1)
+        wf.setnchannels(1)  # 声道数
         wf.setsampwidth(2)
         wf.setframerate(self.SAMPLING_RATE)
         wf.writeframes(np.array(self.Voice_String).tostring())
@@ -28,7 +28,10 @@ class recoder:
 
     def recoder(self):
         pa = PyAudio()
-        stream = pa.open(format=paInt16, channels=1, rate=self.SAMPLING_RATE, input=True,
+        stream = pa.open(format=paInt16,
+                         channels=1,
+                         rate=self.SAMPLING_RATE,
+                         input=True,
                          frames_per_buffer=self.NUM_SAMPLES)
         save_count = 0
         save_buffer = []

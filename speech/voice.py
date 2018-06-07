@@ -7,13 +7,13 @@ import base64
 
 
 class BaiduRest:
-    def __init__(self, cu_id, api_key, api_secert):
+    def __init__(self, cu_id):
         self.token_url = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s"
         self.getvoice_url = "http://tsn.baidu.com/text2audio?tex=%s&lan=zh&cuid=%s&ctp=1&tok=%s"
         self.upvoice_url = 'http://vop.baidu.com/server_api'
 
         self.cu_id = cu_id
-        self.getToken(api_key, api_secert)
+        self.getToken("W15XB5M9h8S566Z6PByqfsqR", "f708b35697899cf82008c3d843cb3066")
         return
 
     def getToken(self, api_key, api_secert):
@@ -52,8 +52,6 @@ class BaiduRest:
 
 
 if __name__ == "__main__":
-    api_key = "W15XB5M9h8S566Z6PByqfsqR"
-    api_secert = "f708b35697899cf82008c3d843cb3066"
     # 初始化
-    bdr = BaiduRest("mike_test_for_python", api_key, api_secert)
-    bdr.getText("test.wav")
+    bdr = BaiduRest("mike_test_for_python")
+    bdr.getText("test2.wav")
