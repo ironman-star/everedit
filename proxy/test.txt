@@ -1,0 +1,1 @@
+,"+proxy2":{"profileType":"FixedProfile","name":"proxy1","bypassList":[{"conditionType":"BypassCondition","pattern":"127.0.0.1"},{"conditionType":"BypassCondition","pattern":"[::1]"},{"conditionType":"BypassCondition","pattern":"localhost"}],"color":"#5b5","revision":"164134922b8","fallbackProxy":{"scheme":"http","port":9000,"host":"hhhhhhhh"}
